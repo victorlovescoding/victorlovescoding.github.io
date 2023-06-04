@@ -22,7 +22,7 @@
 
     <!--Open Graph Title-->
     
-        <meta property="og:title" content="TYC blog"/>
+        <meta property="og:title" content="【前端踩地雷#1】處理前後端框架的模板衝突(Flask &amp; Vue.js)"/>
     
 
     <!--Open Graph Description-->
@@ -35,7 +35,7 @@
 
     <!--Type page-->
     
-        <meta property="og:type" content="website"/>
+        <meta property="og:type" content="article"/>
     
 
     <!--Page Cover-->
@@ -54,7 +54,7 @@
 
     <!-- Title -->
     
-    <title>彙整 - TYC blog</title>
+    <title>【前端踩地雷#1】處理前後端框架的模板衝突(Flask &amp; Vue.js) - TYC blog</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
@@ -164,49 +164,103 @@
 </nav>
 
     <!-- Main Content -->
-    
+    <!-- Page Header -->
+<!-- Set your background image for this header in your post front-matter: cover -->
 
-<!-- Page Header -->
-<!-- Set your background image for this header in the theme's configuration: index_cover -->
 <header class="intro-header" style="background-image: url('/img/landscape.jpeg')">
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <div class="site-heading">
-                    <h1>彙整</h1>
+                <div class="post-heading">
+                    <h1>【前端踩地雷#1】處理前後端框架的模板衝突(Flask & Vue.js)</h1>
+                    
+                    <span class="meta">
+                        <!-- Date and Author -->
+                        
+                        
+                            2023-06-04
+                        
+                    </span>
                 </div>
             </div>
         </div>
     </div>
 </header>
 
-<!-- Main Content -->
-<div class="container">
-    <div class="row">
-        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Tags and categories -->
+           
+                <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1 post-tags">
+                    
+                        
+
+
+<a href="/tags/前端/">#前端</a> <a href="/tags/Flask/">#Flask</a> <a href="/tags/Vue-js/">#Vue.js</a> <a href="/tags/模板衝突/">#模板衝突</a>
+
+
+                    
+                </div>
+                <div class="col-lg-4 col-md-5 post-categories">
+                    
+                        
+
+<a href="/categories/前端踩地雷/">前端踩地雷</a>
+
+                    
+                </div>
             
-                <div class="post-preview">
-    <a href="/【前端踩地雷-1】處理Flask與Vue-js模板衝突/">
-        <h1 class="post-title archive">
-            【前端踩地雷#1】處理前後端框架的模板衝突(Flask & Vue.js)
-        </h1>
-    </a>
-    <p class="post-meta archive">
-        <!-- Date and Author -->
-        
-        2023-06-04
-    </p>
-</div>
+
+            <!-- Gallery -->
             
-            <div class="archive-before-pagination"></div>
-            <ul class="pager">
-    
-    
-</ul>
+
+            <!-- Post Main Content -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <p>最近正在學Vue框架，打算把它拿來重構原本專案的JavaScript，結果第一步就踩雷XD遇到前後端框架上的模板衝突，決定記錄一下。</p>
+<p>我的專案後端是用Python的框架Flask寫，html檔案放在templates裡面，但當我插入Vue.js的cdn，嘗試要在瀏覽器上印出Hello Vue卻印不出來，打開console.log也沒有跳出甚麼錯誤訊息。</p>
+<p>原本的程式碼:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;div id=&quot;app&quot;&gt;&#123;&#123;message&#125;&#125;&lt;/div&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">  const &#123; createApp &#125; = Vue;</span><br><span class="line">  createApp(&#123;</span><br><span class="line">    data() &#123;</span><br><span class="line">      return &#123;</span><br><span class="line">        message: &quot;Hello Vue!&quot;,</span><br><span class="line">      &#125;;</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;).mount(&quot;#app&quot;);</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<p>後來我把整段code貼給chatgpt，它告訴我有可能是因為Flask的模板引擎Jinja2 和Vue.js的模板引擎都有<code>&#123;&#123; &#125;&#125;</code>的語法，產生衝突所以印不出Hello Vue，也因為語法有重疊導致Flask認為這是正確的語法console裡面不會有錯誤訊息。</p>
+<p>後來問chatGPT得到解決辦法是在createApp裡面加入<code>delimiters: [&quot;[[&quot;, &quot;]]&quot;] </code>，意思是把原本包住變數的兩個大括號改成中括號，不讓兩個框架的語法重疊就解決了。</p>
+<p>修改後:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;div id=&quot;app&quot;&gt;[[message]]&lt;/div&gt;</span><br><span class="line">const &#123; createApp &#125; = Vue;</span><br><span class="line">      createApp(&#123;</span><br><span class="line">        data() &#123;</span><br><span class="line">          return &#123;</span><br><span class="line">            message: &quot;Hello Vue!&quot;,</span><br><span class="line">          &#125;;</span><br><span class="line">        &#125;,</span><br><span class="line">        delimiters: [&quot;[[&quot;, &quot;]]&quot;],</span><br><span class="line">      &#125;).mount(&quot;#app&quot;);</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+                
+            </div>
+
+            <!-- Comments -->
+            
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    
+
+
+    <hr />
+    <h3>留言:</h3>
+    <div id="fb-root"></div>
+    <script>
+        (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=1926026324409374";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+    </script>
+
+    <div class="fb-comments" data-href="https://victorlovescoding.github.io/%E3%80%90%E5%89%8D%E7%AB%AF%E8%B8%A9%E5%9C%B0%E9%9B%B7-1%E3%80%91%E8%99%95%E7%90%86Flask%E8%88%87Vue-js%E6%A8%A1%E6%9D%BF%E8%A1%9D%E7%AA%81/index.html" data-num-posts="5" data-width="100%" data-colorscheme="light"></div>
+
+                </div>
+            
         </div>
     </div>
-</div>
-
+</article>
 
     <!-- Footer -->
     <hr />

@@ -1,4 +1,9 @@
+https://victorlovescoding.github.io/%E3%80%90%E5%89%8D%E7%AB%AF%E8%B8%A9%E5%9C%B0%E9%9B%B7-1%E3%80%91%E8%99%95%E7%90%86Flask%E8%88%87Vue-js%E6%A8%A1%E6%9D%BF%E8%A1%9D%E7%AA%81/
 https://victorlovescoding.github.io/categories/index.html
-https://victorlovescoding.github.io/hello-world/
 https://victorlovescoding.github.io/tags/index.html
 https://victorlovescoding.github.io/
+https://victorlovescoding.github.io/tags/%E5%89%8D%E7%AB%AF/
+https://victorlovescoding.github.io/tags/Flask/
+https://victorlovescoding.github.io/tags/Vue-js/
+https://victorlovescoding.github.io/tags/%E6%A8%A1%E6%9D%BF%E8%A1%9D%E7%AA%81/
+https://victorlovescoding.github.io/categories/%E5%89%8D%E7%AB%AF%E8%B8%A9%E5%9C%B0%E9%9B%B7/
