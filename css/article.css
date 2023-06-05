@@ -51,6 +51,10 @@ article .container .row .pullquote {
 article .container .row .pullquote.left {
   float: left;
 }
+figure * {
+  font-size: 1.8rem;
+  line-height: 1.7;
+}
 figure.highlight {
   background: #eee;
   border: 1px solid color-border;

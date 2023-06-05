@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <!--Description-->
+
+    
+
+    
+        <meta name="description" content="TYC的前端探索筆記"/>
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="Victor Chen"/>
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="【JS大哉問#1】淺拷貝(shallow copy) &amp; 深拷貝(deep copy)"/>
+    
+
+    <!--Open Graph Description-->
+    
+        <meta property="og:description" content="TYC的前端探索筆記"/>
+    
+
+    <!--Open Graph Site Name-->
+        <meta property="og:site_name" content="TYC blog"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article"/>
+    
+
+    <!--Page Cover-->
+    
+    
+        <meta property="og:image" content="https://victorlovescoding.github.ioimg/landscape.jpeg"/>
+    
+
+        <meta name="twitter:card" content="summary_large_image"/>
+
+    
+
+    
+        <meta name="twitter:image" content="https://victorlovescoding.github.ioimg/landscape.jpeg"/>
+    
+
+    <!-- Title -->
+    
+    <title>【JS大哉問#1】淺拷貝(shallow copy) &amp; 深拷貝(deep copy) - TYC blog</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+    <link href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css"/>
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css"/>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet"/>
+
+    <!-- Google Analytics -->
+    
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'G-4H89KB6BLR', 'auto');
+        ga('send', 'pageview');
+
+    </script>
+
+
+
+    <!-- favicon -->
+    
+    <link rel="icon" href="https://scontent.cdninstagram.com/v/t51.39111-15/333466257_194188833261445_3478641947024436273_n.jpg?stp=dst-jpg_p320x320&_nc_cat=110&ccb=1-7&_nc_sid=5a057b&_nc_ohc=KFvwb7y5kIwAX9pePLn&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.cdninstagram.com&oh=02_AVAOa191ICg_LZnmXsLYoLubKjFH5J_0Y4_qvEJc700FWg&oe=6403A669&ig_cache_key=MzA0ODE0MjcwMDgxMjgxMDk3NQ%3D%3D.2-ccb7-5"/>
+    
+
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="TYC blog" type="application/atom+xml">
+</head>
+
+
+<body>
+
+    <!-- Menu -->
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/"> </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                
+                    <li>
+                        <a href="/">
+                            
+                                Home
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/archives">
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/tags">
+                            
+                                Tags
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/categories">
+                            
+                                Categories
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+    <!-- Main Content -->
+    <!-- Page Header -->
+<!-- Set your background image for this header in your post front-matter: cover -->
+
+<header class="intro-header" style="background-image: url('/img/landscape.jpeg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>【JS大哉問#1】淺拷貝(shallow copy) & 深拷貝(deep copy)</h1>
+                    
+                    <span class="meta">
+                        <!-- Date and Author -->
+                        
+                        
+                            2023-06-05
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Tags and categories -->
+           
+                <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1 post-tags">
+                    
+                        
+
+
+<a href="/tags/前端/">#前端</a> <a href="/tags/淺拷貝/">#淺拷貝</a> <a href="/tags/深拷貝/">#深拷貝</a> <a href="/tags/JavaScript/">#JavaScript</a>
+
+
+                    
+                </div>
+                <div class="col-lg-4 col-md-5 post-categories">
+                    
+                        
+
+<a href="/categories/JS大哉問/">JS大哉問</a>
+
+                    
+                </div>
+            
+
+            <!-- Gallery -->
+            
+
+            <!-- Post Main Content -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <p>拷貝資料可分為<strong>一般型別的複製 (數字、字串)</strong> ，以及<strong>物件型別的複製 (陣列、物件)</strong> ，在進行一般型別的複製時可以在複製後輕易改動複製來的資料而不會連帶影響原本的資料：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">let a=10;</span><br><span class="line">let b=a;</span><br><span class="line">b=99;</span><br><span class="line">console.log(a) //a=10</span><br></pre></td></tr></table></figure>
+
+<p>但是當我們在做物件的複製時，情況會和一般型別複製不太一樣，先看以下例子：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">let a=[1,2,3]</span><br><span class="line">let b=a</span><br><span class="line">b[0]=999</span><br><span class="line">console.log(a) //[999,2,3]</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">let a=&#123;name:&quot;Bob&quot;,age:21,interest:&quot;jogging&quot;&#125;</span><br><span class="line">let b=a</span><br><span class="line">b.name=&quot;Sam&quot;</span><br><span class="line">console.log(a) //&#123;name:&quot;Sam&quot;,age:21,interest:&quot;jogging&quot;&#125;</span><br></pre></td></tr></table></figure>
+<p>可以發現到把複製過來的b資料做修改時，a的資料竟然也跟著改動了<br>因此，當我們在做物件資料的拷貝時，深拷貝和淺拷貝的用意就在於<strong>「即便更動複製過來的資料也不會影響原本的那份資料」</strong></p>
+<h2 id="淺拷貝"><a href="#淺拷貝" class="headerlink" title="淺拷貝"></a>淺拷貝</h2><h3 id="1-其餘運算"><a href="#1-其餘運算" class="headerlink" title="1. 其餘運算"></a>1. 其餘運算</h3><p>可以用 <code>[...要複製的陣列]、&#123;...要複製的物件&#125;</code>的方式來拷貝，這麼一來即便改動複製過來的資料也不會連帶影響到原本的資料：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">let a=&#123;x:1,y:2,z:3&#125;</span><br><span class="line">let b=&#123;...a&#125;</span><br><span class="line">b.x=999</span><br><span class="line">console.log(a) // &#123;x: 1, y: 2, z: 3&#125;</span><br></pre></td></tr></table></figure>
+<p>乍看之下好像已經解決了我們原先的問題，但這裡還有一個地雷</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">let a=&#123;x:1,y:2,data:&#123;name:&quot;Bob&quot;,age:21,interest:&quot;jogging&quot;&#125;&#125;</span><br><span class="line">let b=&#123;...a&#125;</span><br><span class="line">b.data.name=&quot;Sam&quot;</span><br><span class="line">console.log(a.data.name) //Sam， a的Bob又因為b的改動變成Sam了</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="只能拷貝第一層，當我們的資料有第二、第三層以上的時候，還是會因為改動而互相影響，就叫做淺拷貝"><a href="#只能拷貝第一層，當我們的資料有第二、第三層以上的時候，還是會因為改動而互相影響，就叫做淺拷貝" class="headerlink" title="只能拷貝第一層，當我們的資料有第二、第三層以上的時候，還是會因為改動而互相影響，就叫做淺拷貝"></a><em><strong>只能拷貝第一層，當我們的資料有第二、第三層以上的時候，還是會因為改動而互相影響，就叫做淺拷貝</strong></em></h3><h3 id="2-Object-assign"><a href="#2-Object-assign" class="headerlink" title="2. Object.assign()"></a>2. Object.assign()</h3><p><code>Object.assign(陣列或物件括號, 要複製的資料)</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">let a=&#123;x:1,y:2,z:3&#125;</span><br><span class="line">let b=Object.assign(&#123;&#125;,a)</span><br><span class="line">b.x=999</span><br><span class="line">console.log(a) // &#123;x: 1, y: 2, z: 3&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但一樣到了第二層的資料就會變成<em>傳址(passing by reference)</em></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">let a=&#123;x:1,y:2,data:&#123;name:&quot;Bob&quot;,age:21,interest:&quot;jogging&quot;&#125;&#125;</span><br><span class="line">let b=Object.assign(&#123;&#125;,a)</span><br><span class="line">b.data.name=&quot;Sam&quot;</span><br><span class="line">console.log(a.data.name) //Sam， a的Bob又因為b的改動變成Sam了</span><br></pre></td></tr></table></figure>
+
+<h2 id="深拷貝"><a href="#深拷貝" class="headerlink" title="深拷貝"></a>深拷貝</h2><p>既然淺拷貝只能複製第一層的資料，那深拷貝就是不管有幾層資料都能完整拷貝，且不管怎麼更動複製過來的資料都不影響原本的資料</p>
+<h3 id="1-JSON-stringify-amp-JSON-parse"><a href="#1-JSON-stringify-amp-JSON-parse" class="headerlink" title="1. JSON.stringify() &amp; JSON.parse()"></a>1. JSON.stringify() &amp; JSON.parse()</h3><p><em><strong>先把要複製過來的資料用JSON.stringify字串化，複製完再用JSON.parse變回原本的物件型態</strong></em></p>
+<p><code>JSON.stringify(要複製的物件)</code><br><code>JSON.parse(將複製好的資料物件化)</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">let a=&#123;x:1,y:2,data:[1,2,3]&#125;</span><br><span class="line">let b=JSON.stringify(a)</span><br><span class="line">b=JSON.parse(b)</span><br><span class="line">b.data[0]=999</span><br><span class="line">console.log(a.data[0]) //1</span><br></pre></td></tr></table></figure>
+<p>可以發現，經過JSON格式把物件變成字串複製過來再變回物件後，即使將 b 物件所包覆的data的第一筆資料改成 999 ，也不會影響原本 a 物件所包覆的 data 的第一筆的 1</p>
+<h4 id="JSON-stringify-amp-JSON-parse-缺點-複製過來的function無法呼叫"><a href="#JSON-stringify-amp-JSON-parse-缺點-複製過來的function無法呼叫" class="headerlink" title="JSON.stringify() &amp; JSON.parse()缺點: 複製過來的function無法呼叫"></a>JSON.stringify() &amp; JSON.parse()缺點: 複製過來的function無法呼叫</h4><!-- 可以改字串但是函示不能呼叫
+let a={x:1,y:2,data:function sayHello(){
+    console.log("HELLO!!")
+}}
+let b=JSON.stringify(a)
+b=JSON.parse(b)
+b.data=function sayHello(){
+    console.log("GOOD morning")
+}
+console.log(b.data)  -->
+
+
+<p>抱錯例子: </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">let a=&#123;x:1,y:2,data:function()&#123;</span><br><span class="line">    console.log(&quot;HELLO!!&quot;)</span><br><span class="line">&#125;&#125;</span><br><span class="line">let b=JSON.stringify(a)</span><br><span class="line">b=JSON.parse(b)</span><br><span class="line">console.log(b.data)</span><br><span class="line">b.data() // Uncaught TypeError: b.data is not a function</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-cloneDeep-引用函式庫"><a href="#2-cloneDeep-引用函式庫" class="headerlink" title="2. _.cloneDeep() 引用函式庫"></a>2. _.cloneDeep() 引用函式庫</h3><p>lodash 是JavaScript的函式庫，裡面提供了一個深拷貝方法，讓拷貝過來的function可以被呼叫</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">let a=&#123;x:1,y:2,data:function()&#123;</span><br><span class="line">    console.log(&quot;HELLO!!&quot;)</span><br><span class="line">&#125;&#125;</span><br><span class="line">let b=_.cloneDeep(a)</span><br><span class="line">b.data() //HELLO!!</span><br></pre></td></tr></table></figure>
+
+<h2 id="參考資料"><a href="#參考資料" class="headerlink" title="參考資料"></a>參考資料</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=tnT-XbrOKA0&t=892s&ab_channel=%E5%BD%AD%E5%BD%AD%E7%9A%84%E8%AA%B2%E7%A8%8B">JavaScript 物件的淺拷貝、深拷貝 - Front End 網頁前端工程教學</a></li>
+<li><a target="_blank" rel="noopener" href="https://lodash.com/docs/4.17.15#cloneDeep">Lodash官方文件</a></li>
+</ul>
+
+
+                
+            </div>
+
+            <!-- Comments -->
+            
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    
+
+
+    <hr />
+    <h3>留言:</h3>
+    <div id="fb-root"></div>
+    <script>
+        (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=1926026324409374";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+    </script>
+
+    <div class="fb-comments" data-href="https://victorlovescoding.github.io/post/index.html" data-num-posts="5" data-width="100%" data-colorscheme="light"></div>
+
+                </div>
+            
+        </div>
+    </div>
+</article>
+
+    <!-- Footer -->
+    <hr />
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+
+                    
+                        <li>
+                            <a href="https://www.facebook.com/profile.php?id=100071599140466" target="_blank">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                    
+
+                    
+                        <li>
+                            <a href="https://github.com/victorlovescoding" target="_blank">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                    
+
+                    
+
+                    
+
+                    
+                </ul>
+                <p class="copyright text-muted">&copy; 2023 Victor Chen<br></p>
+                <p class="copyright text-muted">Original Theme <a target="_blank" href="http://startbootstrap.com/template-overviews/clean-blog/">Clean Blog</a> from <a href="http://startbootstrap.com/" target="_blank">Start Bootstrap</a></p>
+                <p class="copyright text-muted">Adapted for <a target="_blank" href="https://hexo.io/">Hexo</a> by <a href="http://www.codeblocq.com/" target="_blank">Jonathan Klughertz</a></p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+    <!-- After footer scripts -->
+    
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Bootstrap -->
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>
