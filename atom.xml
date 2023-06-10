@@ -6,7 +6,7 @@
   <link href="https://victorlovescoding.github.io/atom.xml" rel="self"/>
   
   <link href="https://victorlovescoding.github.io/"/>
-  <updated>2023-06-05T11:50:50.733Z</updated>
+  <updated>2023-06-10T09:01:20.912Z</updated>
   <id>https://victorlovescoding.github.io/</id>
   
   <author>
@@ -15,6 +15,40 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>【前端踩地雷#2】import會出現的問題(importmap)</title>
+    <link href="https://victorlovescoding.github.io/%E5%AF%ABVue%E5%BC%95%E7%94%A8cdn%E5%87%BA%E7%8F%BE%E7%9A%84%E5%95%8F%E9%A1%8C/"/>
+    <id>https://victorlovescoding.github.io/%E5%AF%ABVue%E5%BC%95%E7%94%A8cdn%E5%87%BA%E7%8F%BE%E7%9A%84%E5%95%8F%E9%A1%8C/</id>
+    <published>2023-06-08T14:39:05.000Z</published>
+    <updated>2023-06-10T09:01:20.912Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近想練習Vue的Composition API，順便重構原本的專案，但在引入CDN後發生了一些問題，想紀錄一下來龍去脈</p><p>HTML</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;div id=&quot;app&quot;&gt;&#123;&#123; message &#125;&#125;&lt;/div&gt;</span><br><span class="line">&lt;script src=&quot;https://unpkg.com/vue@3/dist/vue.global.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script src=&quot;/src/script.js&quot;&gt;&lt;/script&gt;</span><br></pre></td></tr></table></figure><p>JS</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">import &#123; createApp, reactive, ref &#125; from &#x27;vue&#x27;</span><br><span class="line">createApp(&#123;</span><br><span class="line">  </span><br><span class="line">  setup() &#123;</span><br><span class="line">    const counter = reactive(&#123; count: 0 &#125;)</span><br><span class="line">    const message = ref(&#x27;Helo World!&#x27;)</span><br><span class="line"></span><br><span class="line">    return &#123;</span><br><span class="line">      counter,</span><br><span class="line">      message</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;).mount(&#x27;#app&#x27;)</span><br></pre></td></tr></table></figure><p>出現錯誤 <code>Uncaught SyntaxError: Cannot use import statement outside a module</code> 搜尋一下發現沒有在引用JS檔案的那條script標籤裡面加上type&#x3D;”module”</p><p>不過加上後又冒出一個新的錯誤資訊 <code>Uncaught TypeError: Failed to resolve module specifier &quot;vue&quot;. Relative references must start with either &quot;/&quot;, &quot;./&quot;, or &quot;../&quot;.</code> </p><p>回去找Vue.js官方文件:</p><blockquote><p>We can teach the browser where to locate the vue import by using Import Maps:</p></blockquote><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;script type=&quot;importmap&quot;&gt;</span><br><span class="line">  &#123;</span><br><span class="line">    &quot;imports&quot;: &#123;</span><br><span class="line">      &quot;vue&quot;: &quot;https://unpkg.com/vue@3/dist/vue.esm-browser.js&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure><p>於是就正常了：<br>HTML</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;script type=&quot;importmap&quot;&gt;</span><br><span class="line">      &#123;</span><br><span class="line">        &quot;imports&quot;: &#123;</span><br><span class="line">          &quot;vue&quot;: &quot;https://unpkg.com/vue@3/dist/vue.esm-browser.js&quot;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">&lt;/script&gt;</span><br><span class="line">&lt;script src=&quot;https://unpkg.com/vue@3/dist/vue.global.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script type=&quot;module&quot;src=&quot;/src/script.js&quot;&gt;&lt;/script&gt;</span><br></pre></td></tr></table></figure><p>JS</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">import &#123; createApp, reactive, ref &#125; from &#x27;vue&#x27;</span><br><span class="line">createApp(&#123;</span><br><span class="line">  </span><br><span class="line">  setup() &#123;</span><br><span class="line">    const counter = reactive(&#123; count: 0 &#125;)</span><br><span class="line">    const message = ref(&#x27;Helo World!&#x27;)</span><br><span class="line"></span><br><span class="line">    return &#123;</span><br><span class="line">      counter,</span><br><span class="line">      message</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;).mount(&#x27;#app&#x27;)</span><br></pre></td></tr></table></figure><hr><h1 id="後記"><a href="#後記" class="headerlink" title="後記"></a>後記</h1><h2 id="importmap"><a href="#importmap" class="headerlink" title="importmap"></a>importmap</h2><p>雖然ES6已經有import export可以模組化程式的功能，但在實際使用時</p><h3 id="“必須要用相對路徑、絕對路徑或是URL的方式import-”"><a href="#“必須要用相對路徑、絕對路徑或是URL的方式import-”" class="headerlink" title="“必須要用相對路徑、絕對路徑或是URL的方式import ”"></a>“<em>必須要用相對路徑、絕對路徑或是URL的方式import</em> ”</h3><p>例如：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import &#123; createApp, reactive, ref &#125; from &#x27;https://unpkg.com/vue@3/dist/vue.esm-browser.js&#x27;</span><br></pre></td></tr></table></figure><p>否則console就會出現<code>Relative references must start with either &quot;/&quot;, &quot;./&quot;, or &quot;../&quot;.</code> </p><p>importmap就是要解決這樣的問題<br>，只要在script標籤裡面加上importmap，並用JSON的格式將要管理的路徑和對應的名稱統一管理在這個標籤裡面</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;script type=&quot;importmap&quot;&gt;</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;imports&quot;: &#123;</span><br><span class="line">        &quot;vue&quot;: &quot;https://unpkg.com/vue@3/dist/vue.esm-browser.js&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure><p>就可以用原本的方式引入：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import &#123; createApp, reactive, ref &#125; from &#x27;vue&#x27; </span><br></pre></td></tr></table></figure><p>對來說瀏覽器就會看起來像是：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import &#123; createApp, reactive, ref &#125; from &#x27;https://unpkg.com/vue@3/dist/vue.esm-browser.js&#x27;</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;最近想練習Vue的Composition API，順便重構原本的專案，但在引入CDN後發生了一些問題，想紀錄一下來龍去脈&lt;/p&gt;
+&lt;p&gt;HTML&lt;/p&gt;
+&lt;figure class=&quot;highlight plaintext&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gu</summary>
+      
+    
+    
+    
+    <category term="前端踩地雷" scheme="https://victorlovescoding.github.io/categories/%E5%89%8D%E7%AB%AF%E8%B8%A9%E5%9C%B0%E9%9B%B7/"/>
+    
+    
+    <category term="前端" scheme="https://victorlovescoding.github.io/tags/%E5%89%8D%E7%AB%AF/"/>
+    
+    <category term="Vue.js" scheme="https://victorlovescoding.github.io/tags/Vue-js/"/>
+    
+    <category term="JavaScript" scheme="https://victorlovescoding.github.io/tags/JavaScript/"/>
+    
+    <category term="import" scheme="https://victorlovescoding.github.io/tags/import/"/>
+    
+    <category term="importmap" scheme="https://victorlovescoding.github.io/tags/importmap/"/>
+    
+  </entry>
   
   <entry>
     <title>【JS大哉問#1】淺拷貝(shallow copy) &amp; 深拷貝(deep copy)</title>
